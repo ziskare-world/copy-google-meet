@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video-chat</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <input type="text" name="name" id="name">
+    <button type="submit" id="createBtn">Create Meeting</button>
+    <input type="text" name="meetingid" id="meetid">
+    <button type="submit" id="joinBtn">Join Room</button>
+</body>
+<script>
+        // Generate random meeting ID and redirect
+    document.getElementById('createBtn').onclick = () => {
+        const meetingID = Math.random().toString(36).substring(2, 10);
+        const name = document.getElementById('name').value;
+        if(name == ''){
+            alert('Please enter your name');
+            return
+        }else{
+            localStorage.setItem('userId', name);
+            window.location.href = `/room/${meetingID}`;
+        }
+    };
+
+    // Join existing meeting
+    document.getElementById('joinBtn').onclick = () => {
+    const meetingID = document.getElementById('meetid').value.trim();
+    const name = document.getElementById('name').value;
+    if (meetingID) {
+        if(name == ''){
+            alert('Please enter your name');
+        }else{
+            localStorage.setItem('userId', name);
+            window.location.href = `/room/${meetingID}`;
+        }
+    } else {
+        alert("Please enter a meeting ID.");
+    }
+};
+</script>
+</html>

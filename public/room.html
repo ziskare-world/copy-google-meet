@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Video-Chatting</title>
+  <link rel="stylesheet" href="/style1.css">
+</head>
+<body>
+  <div class="view" id="view-panel">
+    <!-- Other Video -->
+    <div class="video">
+      <video id="vid-other" class="vid_other"  muted></video>
+      <button class="fullscreen-btn" aria-label="Fullscreen">
+        <ion-icon name="expand"></ion-icon>
+      </button>
+      
+    </div>
+    <div id="videoPanel" class="video_">
+      <video id="vid" class="vid" autoplay muted playsinline></video>
+       <!-- <button class="fullscreen-btn" aria-label="Fullscreen">
+        <ion-icon name="expand"></ion-icon>
+      </button> -->
+    </div>
+    
+  </div>
+
+  <div class="side-panel" id="side-remot-video">
+    <h2>Other Participant</h2>
+    <div class="video">
+      <canvas id="remot-vid" class="uhd" ></canvas>
+      <button class="fullscreen-btn" id="side" aria-label="Fullscreen">
+        <ion-icon name="expand"></ion-icon>
+      </button>
+      <button class="mic-ico" id="side" aria-label="Mic">
+          <ion-icon name="mic-outline"></ion-icon>
+      </button>
+      <label>Name</label>
+    </div>
+    
+    <!-- Add Extra video hear for more content -->
+    
+  </div>
+  <div class="side-panel" id="side-chat">
+     <div id="chat-container">
+    <div id="messages">
+      
+    </div>
+    <div id="chat-form">
+      <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off" />
+      <button  id="send-msg">Send</button>
+    </div>
+  </div>
+  </div>
+  <div id="whiteboard-controls" style="display:none; ">
+      <input type="color" id="pen-color" value="#000000" />
+      <button id="eraser-btn" title=" use Erasor"><ion-icon name="ellipse-outline"></ion-icon></button>
+      <button id="clear-btn" title="Clear Board"><ion-icon name="trash-outline"></ion-icon></button>
+
+      <button id="undo-btn" title="undo"><ion-icon name="arrow-undo-outline"></ion-icon></button>
+      <button id="redo-btn" title="redo"><ion-icon name="arrow-redo-outline"></ion-icon></button>
+
+      <button id="screenshot-btn" title="save as image"><ion-icon name="save-outline"></ion-icon></button>
+
+      <button id="prev-board" title="previous board"><ion-icon name="arrow-back-outline"></ion-icon></button>
+      <button id="next-board" title="Next board"><ion-icon name="arrow-forward-outline"></ion-icon></button>
+      <button id="add-board" title="Create new board"><ion-icon name="add-outline"></ion-icon></button>
+      <div id="board-index-display"></div>
+
+  </div>
+  <div class="alert" id="alert"></div>
+  <div class="nav-tab">
+    <button id="toggle-theme" title="Toggle Theme">
+      <ion-icon name="moon-outline" id="theme-icon"></ion-icon>
+    </button>
+
+    <button id="toogle-camera">
+      <ion-icon name="videocam-outline" id="cam-on"></ion-icon>
+      <ion-icon name="videocam-off-outline" id="cam-off" style="display: none;"></ion-icon>
+    </button>
+
+    <button id="switch-camera">
+      <ion-icon name="camera-reverse-outline"></ion-icon>
+    </button>
+
+    <button id="toogle-audio">
+      <ion-icon name="mic-outline" id="mic-on"></ion-icon>
+      <ion-icon name="mic-off-outline" id="mic-off" style="display: none;"></ion-icon>
+    </button>
+
+    <button id="share-screen" title="Share Screen">
+      <ion-icon name="tv-outline"></ion-icon>
+    </button>
+
+    <button id="share-white-board" title="Whiteboard">
+      <ion-icon name="tablet-landscape-outline"></ion-icon>
+    </button>
+
+    <button id="end-meeting" title="End Meeting" style="color: red;">
+      <ion-icon name="call"></ion-icon>
+    </button>
+
+    <button id="toggle-remote-video" title="Remote Video">
+       <ion-icon name="people-outline"></ion-icon>
+    </button>
+    <button id="toggle-chat-pannel" title="Chat Pannel">
+       <ion-icon name="chatbubble-outline"></ion-icon>
+    </button>
+  </div>
+  
+</body>
+<script src="/script.js"></script>
+<script type="module" src="/video.js"></script>
+<script type="module" src="/whiteboard.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-peer@9/simplepeer.min.js"></script>
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+<script src="/cornor.js"></script>
+</html>

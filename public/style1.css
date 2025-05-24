@@ -1,0 +1,629 @@
+/* Base styles and resets */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* ========== 1. DARK THEME ========== */
+body.theme-dark {
+  background-color: #121212;
+  color: #fff;
+}
+
+body.theme-dark .view {
+  background-color: #1e1e1e;
+}
+
+body.theme-dark .side-panel {
+  background-color: #1a1a1a;
+  border-left: 1px solid #333;
+  color: #ddd;
+}
+
+body.theme-dark .nav-tab {
+  background-color: #222;
+  border-top: 1px solid #333;
+}
+
+body.theme-dark button {
+  background: #333;
+  color: white;
+}
+#side-remot-video button{
+  background-color: #333;
+  color: white;
+}
+body.theme-dark button:hover {
+  background-color: #444;
+}
+
+body.theme-dark #side-remot-video button{
+    background-color: #333;
+  color: white;
+}
+
+body.theme-dark #side-remot-video button:hover{
+  background-color: #444;
+}
+
+body.theme-dark .alert{
+  color: rgb(245, 238, 238);
+}
+/* ========== 2. LIGHT THEME ========== */
+body.theme-light {
+  background-color: #f0f0f0;
+  color: #222;
+}
+
+body.theme-light .view {
+  background-color: #fff;
+}
+
+body.theme-light .side-panel {
+  background-color: #fafafa;
+  border-left: 1px solid #ccc;
+  color: #222;
+}
+
+body.theme-light .nav-tab {
+  background-color: #eaeaea;
+  border-top: 1px solid #ccc;
+}
+
+body.theme-light button {
+  background: #ddd;
+  color: #222;
+}
+
+body.theme-light button:hover {
+  background-color: #ccc;
+}
+
+body.theme-light #side-remot-video button{
+  background: #ddd;
+  color: #222;
+}
+
+body.theme-light #side-remot-video button:hover{
+  background-color: #ccc;
+}
+
+body.theme-light .alert{
+  color: rgb(0, 0, 0);
+}
+/* ========== 3. COLORED THEME ========== */
+body.theme-colored {
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  color: #fff;
+}
+
+body.theme-colored .view {
+  background-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+}
+
+body.theme-colored .side-panel {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-left: 2px solid rgba(255, 255, 255, 0.3);
+  color: #e0e0ff;
+}
+
+body.theme-colored .nav-tab {
+  background-color: rgba(255, 255, 255, 0.12);
+  border-top: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+body.theme-colored button {
+  background: #4c6ef5;
+  color: white;
+  box-shadow: 0 2px 8px rgba(76, 110, 245, 0.6);
+}
+
+body.theme-colored button:hover {
+  background-color: #5c7cfa;
+  box-shadow: 0 4px 12px rgba(92, 124, 250, 0.9);
+  transform: scale(1.1);
+}
+
+body.theme-colored #side-remot-video button{
+  background: #4c6ef5;
+  color: white;
+  box-shadow: 0 2px 8px rgba(76, 110, 245, 0.6);
+}
+
+body.theme-colored #side-remot-video button:hover{
+  background-color: #5c7cfa;
+  box-shadow: 0 4px 12px rgba(92, 124, 250, 0.9);
+  transform: scale(1.1);
+}
+
+body.theme-colored .alert{
+  box-shadow: 0 4px 12px rgba(92, 124, 250, 0.9);
+  background-color: #02020222;
+  color: rgb(242, 237, 237);
+}
+/* ========== 4. WARM THEME ========== */
+body.theme-warm {
+  background: linear-gradient(135deg, #ff6a00 0%, #ee0979 100%);
+  color: #fff;
+}
+
+body.theme-warm .view {
+  background-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+}
+
+body.theme-warm .side-panel {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-left: 2px solid rgba(255, 255, 255, 0.4);
+  color: #ffe5e5;
+}
+
+body.theme-warm .nav-tab {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-top: 2px solid rgba(255, 255, 255, 0.4);
+}
+
+body.theme-warm button {
+  background: #ff4500;
+  color: white;
+  box-shadow: 0 2px 8px rgba(255, 69, 0, 0.7);
+}
+
+body.theme-warm button:hover {
+  background-color: #ff5c33;
+  box-shadow: 0 4px 12px rgba(255, 92, 51, 0.9);
+  transform: scale(1.1);
+}
+
+body.theme-warm #side-remot-video button{
+  background: #ff4500;
+  color: white;
+  box-shadow: 0 2px 8px rgba(255, 69, 0, 0.7);
+}
+
+body.theme-warm #side-remot-video button:hover{
+  background-color: #ff5c33;
+  box-shadow: 0 4px 12px rgba(255, 92, 51, 0.9);
+  transform: scale(1.1);
+}
+
+body.theme-warm .alert{
+  box-shadow: 0 4px 12px rgb(255, 92, 51);
+  background-color: #02020200;
+  color: rgb(255, 255, 255);
+}
+
+/* ========== 5. OCEAN THEME ========== */
+body.theme-ocean {
+  background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+  color: #e0f7ff;
+}
+
+body.theme-ocean .view {
+  background-color: rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 20px rgba(0, 198, 255, 0.3);
+  border-radius: 12px;
+}
+
+body.theme-ocean .side-panel {
+  background-color: rgba(0, 198, 255, 0.15);
+  border-left: 2px solid rgba(0, 198, 255, 0.4);
+  color: #d0f0ff;
+}
+
+body.theme-ocean .nav-tab {
+  background-color: rgba(0, 198, 255, 0.12);
+  border-top: 2px solid rgba(0, 198, 255, 0.4);
+}
+
+body.theme-ocean button {
+  background: #0085e0;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 133, 224, 0.7);
+}
+
+body.theme-ocean button:hover {
+  background-color: #0099ff;
+  box-shadow: 0 4px 12px rgba(0, 153, 255, 0.9);
+  transform: scale(1.1);
+}
+
+body.theme-ocean #side-remot-video button{
+  background: #0085e0;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 133, 224, 0.7);
+}
+body.theme-ocean #side-remot-video button:hover{
+  background: #0085e0;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 133, 224, 0.7);
+}
+
+body.theme-ocean .alert{
+  box-shadow: 0 2px 8px rgba(0, 133, 224, 0.7);
+  background-color: #02020200;
+  color: rgb(255, 255, 255);
+}
+/* ========== COMMON STYLES ========== */
+
+/* Increase the video container size */
+.view {
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  max-width: 100%;
+  max-height: 100vh;
+  overflow-y: auto;
+  flex-wrap: wrap;
+}
+
+/* Make video container take more width & height */
+.video {
+  position: relative;
+  width: 90vw;        /* 90% of viewport width */
+  max-width: 1280px;  /* max width */
+  height: 70vh;       /* 70% of viewport height */
+  max-height: 720px;  /* max height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 80px;
+}
+
+/* Video element fills container with rounded corners */
+.vid {
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  object-fit: cover;
+  background: #000;
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.25);
+
+}
+
+.vid_other{
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  object-fit: cover;
+  background: #000;
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.25);
+}
+.fullscreen-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(0,0,0,0.5);
+  border: none;
+  border-radius: 50%;
+  padding: 10px;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.6);
+}
+
+.fullscreen-btn:hover {
+  background: rgba(0,0,0,0.8);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.9);
+}
+
+.mic-ico{
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(0,0,0,0.5);
+  border: none;
+  border-radius: 50%;
+  padding: 10px;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.6);
+}
+
+.side-panel {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 320px;
+  overflow-y: auto;
+  padding: 15px;
+  display: none;
+  border-radius: 0 0 0 12px;
+  transition: all 10s ease-in;
+}
+#side-remot-video button{
+  font-size: 16px;
+  margin-top: 12px;
+  padding: 5px 100px;
+  cursor: pointer;
+  color: white;
+}
+.nav-tab {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  gap: 12px;
+}
+
+.nav-tab button {
+  border: none;
+  padding: 14px;
+  margin: 0 6px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 22px;
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  color: white;
+}
+
+.nav-tab ion-icon {
+  font-size: 24px;
+}
+
+/* Toggle visibility for cam/mic icons */
+#cam-off, #mic-off {
+  display: none;
+}
+
+/* Small video styling */
+.side-panel .video {
+  position: relative;
+  width: 100%;
+  height: 120px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+
+.side-panel .video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  background-color: #000;
+}
+
+/* Button inside video box (e.g. fullscreen or name) */
+.side-panel .video {
+  position: relative;  /* Important: container must be relative for absolute children */
+  width: 100%;
+  height: 120px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.side-panel .video > button.fullscreen-btn {
+  position: absolute;
+  top: 6px;       /* small gap inside top */
+  right: 6px;     /* small gap inside right */
+
+  width: 28px !important;
+  height: 28px !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  background-color: rgba(0, 0, 0, 0.6);
+  border: none;
+  border-radius: 50%;
+
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+
+  font-size: 18px !important;
+  color: white !important;
+
+  cursor: pointer;
+  line-height: 0 !important;
+  z-index: 10 !important;
+}
+
+.side-panel .video > button.fullscreen-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.side-panel .video > button.fullscreen-btn ion-icon {
+  width: 16px !important;
+  height: 16px !important;
+  font-size: 16px !important;
+  line-height: 0 !important;
+}
+.video label {
+  position: absolute;
+  bottom: 6px;      /* small gap from bottom */
+  left: 12px;       /* some padding from left */
+  color: white;
+  font-size: 14px;
+  background-color: rgba(0, 0, 0, 0.5); /* semi-transparent bg for readability */
+  padding: 2px 8px;
+  border-radius: 6px;
+  pointer-events: none; /* so it doesn’t block clicks */
+  user-select: none;
+  z-index: 10;
+  white-space: nowrap; /* prevent label text wrap */
+}
+
+.side-panel .video button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.whiteboard-canvas {
+  display: none;
+  width: 100%;
+  height: 100%;
+  border: 1px solid #ccc;
+  cursor: url('pencil.svg') 0 24, auto;
+  background-color: white;
+}
+.hidden {
+    display: block;
+}
+
+#chat-container {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 300px;
+  height: 100vh;
+  background-color: #f7f7f7;
+  border-left: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 10px;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+  z-index: 10;
+}
+
+#messages {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 8px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.3;
+  color: #333;
+}
+
+#messages div {
+  margin-bottom: 8px;
+  padding: 6px 8px;
+  background: #e1f0ff;
+  border-radius: 4px;
+  word-wrap: break-word;
+  font-weight: bold;
+}
+
+#chat-form {
+  display: flex;
+  margin-top: 10px;
+}
+
+#chat-input {
+  flex-grow: 1;
+  padding: 8px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px 0 0 4px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+#chat-input:focus {
+  border-color: #007bff;
+}
+
+#chat-form button {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #007bff;
+  background-color: #007bff;
+  color: white;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+#chat-form button:hover {
+  background-color: #0056b3;
+}
+.video {
+  position: relative;
+  margin: 10px;
+}
+
+.video_{
+  position: fixed;
+  bottom: 1px;
+  right: 0.7px;
+  margin-bottom: 90px;
+  margin-right: 10px;
+}
+.video_ video{
+  height: 130px;
+  width: 230px;
+}
+.video_ .fullscreen-btn{
+  position: absolute;
+}
+@media (max-width: 500px) {
+      .video-panel {
+        width: 90vw;
+      }
+    }
+
+.mic-status {
+  font-size: 18px;
+  color: #444;
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(255,255,255,0.8);
+  padding: 2px 6px;
+  border-radius: 5px;
+}
+.mic-muted .mic-status::after {
+    content: " 🔇";
+    color: red;
+}
+
+#side-remot-video{
+  overflow-x: hidden;
+}
+
+#whiteboard-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+  gap: 12px;
+  cursor: url('pencil.svg');
+}
+
+#whiteboard-controls button {
+  border: none;
+  padding: 8px;
+  margin: 0 6px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 22px;
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  color: white;
+}
+
+#whiteboard-controls ion-icon {
+  font-size: 24px;
+}
+.alert{
+  position: absolute;
+  height: 30px;
+  max-height: 120px;
+  width: auto;
+  margin-top: 20px;
+  margin-left: 30px;
+  padding: 5px;
+}

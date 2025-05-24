@@ -1,0 +1,176 @@
+document.addEventListener("DOMContentLoaded", () => {
+  const videoElem = document.getElementById("vid");
+  const camToggleBtn = document.getElementById("toggle-camera");
+  const switchCameraBtn = document.getElementById("switch-camera");
+  const micToggleBtn = document.getElementById("toggle-audio");
+  const fullscreenBtn = document.querySelector(".fullscreen-btn");
+  const shareScreenBtn = document.getElementById("share-screen");
+  const endBtn = document.getElementById("end-meeting");
+
+  const camOnIcon = document.getElementById("cam-on");
+  const camOffIcon = document.getElementById("cam-off");
+  const micOnIcon = document.getElementById("mic-on");
+  const micOffIcon = document.getElementById("mic-off");
+
+  let videoStream = null;
+  let audioStream = null;
+  let isCameraOn = false;
+  let isMicOn = false;
+  let currentFacingMode = "user";
+
+  function stopVideoTracks() {
+    if (videoStream) {
+      videoStream.getTracks().forEach(track => track.stop());
+      videoStream = null;
+    }
+  }
+
+  function stopAudioTracks() {
+    if (audioStream) {
+      audioStream.getTracks().forEach(track => track.stop());
+      audioStream = null;
+    }
+  }
+
+  function updateCamIcons() {
+    camOnIcon.style.display = isCameraOn ? "block" : "none";
+    camOffIcon.style.display = isCameraOn ? "none" : "block";
+  }
+
+  function updateMicIcons() {
+    micOnIcon.style.display = isMicOn ? "block" : "none";
+    micOffIcon.style.display = isMicOn ? "none" : "block";
+  }
+
+  function applyCombinedStream() {
+    const combinedTracks = [];
+    if (videoStream) combinedTracks.push(...videoStream.getVideoTracks());
+    if (audioStream) combinedTracks.push(...audioStream.getAudioTracks());
+
+    if (combinedTracks.length > 0) {
+      const combinedStream = new MediaStream(combinedTracks);
+      videoElem.srcObject = combinedStream;
+      videoElem.controls = false;
+      videoElem.play();
+    } else {
+      videoElem.srcObject = null;
+    }
+  }
+
+  async function startCamera() {
+    try {
+      stopVideoTracks();
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: currentFacingMode },
+        audio: false
+      });
+      videoStream = stream;
+      isCameraOn = true;
+      updateCamIcons();
+      applyCombinedStream();
+    } catch (err) {
+      console.error("Error starting camera:", err);
+      alert("Camera access denied or not available.");
+      showFallbackVideo();
+    }
+  }
+
+  async function startMicrophone() {
+    try {
+      stopAudioTracks();
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: false,
+        audio: true
+      });
+      audioStream = stream;
+      isMicOn = true;
+      updateMicIcons();
+      applyCombinedStream();
+    } catch (err) {
+      console.error("Error accessing microphone:", err);
+      alert("Microphone access denied or not available.");
+    }
+  }
+
+  function stopCamera() {
+    stopVideoTracks();
+    isCameraOn = false;
+    updateCamIcons();
+    applyCombinedStream();
+  }
+
+  function stopMicrophone() {
+    stopAudioTracks();
+    isMicOn = false;
+    updateMicIcons();
+    applyCombinedStream();
+  }
+
+  function showFallbackVideo() {
+    stopCamera();
+    videoElem.srcObject = null;
+    videoElem.src = "/video.mp4"; // fallback video file
+    videoElem.play();
+    updateCamIcons();
+    updateMicIcons();
+  }
+
+  camToggleBtn.addEventListener("click", () => {
+    if (isCameraOn) {
+      stopCamera();
+    } else {
+      startCamera();
+    }
+  });
+
+  switchCameraBtn.addEventListener("click", () => {
+    if (!isCameraOn) return;
+    currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
+    startCamera();
+  });
+
+  micToggleBtn.addEventListener("click", () => {
+    if (isMicOn) {
+      stopMicrophone();
+    } else {
+      startMicrophone();
+    }
+  });
+
+  fullscreenBtn.addEventListener("click", () => {
+    if (!document.fullscreenElement) {
+      videoElem.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  });
+
+  shareScreenBtn.addEventListener("click", async () => {
+    try {
+      const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+      stopCamera();
+      videoStream = screenStream;
+
+      screenStream.getVideoTracks()[0].addEventListener("ended", () => {
+        showFallbackVideo();
+      });
+
+      isCameraOn = true;
+      updateCamIcons();
+      applyCombinedStream();
+    } catch (err) {
+      console.error("Screen sharing failed:", err);
+    }
+  });
+
+
+  endBtn.addEventListener("click", () => {
+    stopCamera();
+    stopMicrophone();
+    location.replace("../");
+    
+  });
+
+  // Initialize
+  showFallbackVideo();
+});
