@@ -81,6 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
       isCameraOn = true;
       updateCamIcons();
       applyCombinedStream();
+
     } catch (err) {
       console.error("Error starting camera:", err);
       alert("Camera access denied or not available.");
@@ -176,13 +177,13 @@ socket.on('room-users', (userList) => {
     const userData = userList[user];
     const { socketId , role } = userData;
     
-    const canvasId = `remot_vid_${socketId}`;
+    const videoId = `remot_vid_${socketId}`;
     const fullscreenBtnId = `fullscreen_${user}`;
     const micIconId = `mic_stat_${user}`;
 
     panelHTML += `
        <div class="video">
-          <canvas id="${canvasId}" class="uhd"></canvas>
+          <video id="${videoId}" class="uhd"></video>
           <button class="fullscreen-btn" id="${fullscreenBtnId}" aria-label="Fullscreen">
             <ion-icon name="expand"></ion-icon>
           </button>
@@ -197,13 +198,13 @@ socket.on('room-users', (userList) => {
   }
   side_remot.innerHTML = panelHTML ;
 
-  document.addEventListener('click', (e) => {
-  if (e.target.closest('.fullscreen-btn')) {
-    const canvas = e.target.closest('.video').querySelector('canvas');
-    if (canvas.requestFullscreen) canvas.requestFullscreen();
-  }
 });
 
+  document.addEventListener('click', (e) => {
+  if (e.target.closest('.fullscreen-btn')) {
+    const canvas = e.target.closest('.video').querySelector('video');
+    if (canvas.requestFullscreen) canvas.requestFullscreen();
+  }
 });
 
   socket.on('user-mic-status', ({ userId, micStatus }) => {
