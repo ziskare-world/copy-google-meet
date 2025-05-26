@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const socket = io('http://localhost:8080');
   const roomId = getRoomId();
   const userId = getUserId();
-
+  const role = getUserRole();
 
   function stopVideoTracks() {
     if (videoStream) {
@@ -135,11 +135,16 @@ document.addEventListener("DOMContentLoaded", () => {
     return last;
   }
   function getUserId(){
-    return localStorage.getItem('userId');
+    const id = JSON.parse(localStorage.getItem('userId'));
+    return id.name ;
+  }
+  function getUserRole(){
+    const id = JSON.parse(localStorage.getItem('userId'));
+    return id.role ;
   }
   // socket.io codes
   // Join Room
-  socket.emit('join-room', {roomId, userId});
+  socket.emit('join-room', {roomId, userId, role});
   socket.on('previous-messages', (messages) =>{
     const messagesElement = document.getElementById('messages');
     messagesElement.innerHTML = `` ;
@@ -166,14 +171,17 @@ socket.on('room-users', (userList) => {
 
   let panelHTML = '';
 
-  userList.forEach((user, index) => {
+  for (const user in userList) {
     if (user !== userId) {
-      const canvasId = `remot_vid_${index}_${user}`;
-      const fullscreenBtnId = `fullscreen_${index}_${user}`;
-      const micIconId = `mic_stat_${user}`;
+    const userData = userList[user];
+    const { socketId , role } = userData;
+    
+    const canvasId = `remot_vid_${socketId}`;
+    const fullscreenBtnId = `fullscreen_${user}`;
+    const micIconId = `mic_stat_${user}`;
 
-      panelHTML += `
-        <div class="video">
+    panelHTML += `
+       <div class="video">
           <canvas id="${canvasId}" class="uhd"></canvas>
           <button class="fullscreen-btn" id="${fullscreenBtnId}" aria-label="Fullscreen">
             <ion-icon name="expand"></ion-icon>
@@ -181,36 +189,21 @@ socket.on('room-users', (userList) => {
           <button class="fullscreen-btn mic-ico" aria-label="Mic" disabled>
             <ion-icon id="${micIconId}" name="mic-off-outline"></ion-icon>
           </button>
-          <label>${user}</label>
+          <label>${role} : ${user}</label>
         </div>
-      `;
+    `; 
+
     }
-  });
+  }
+  side_remot.innerHTML = panelHTML ;
 
-  side_remot.innerHTML = panelHTML;
+  document.addEventListener('click', (e) => {
+  if (e.target.closest('.fullscreen-btn')) {
+    const canvas = e.target.closest('.video').querySelector('canvas');
+    if (canvas.requestFullscreen) canvas.requestFullscreen();
+  }
+});
 
-  // After DOM is updated, attach fullscreen listeners
-  userList.forEach((user, index) => {
-    if (user !== userId) {
-      const canvas = document.getElementById(`remot_vid_${index}_${user}`);
-      const fullscreenBtn = document.getElementById(`fullscreen_${index}_${user}`);
-
-      if (canvas && fullscreenBtn) {
-        fullscreenBtn.addEventListener('click', () => {
-          side_remot.style.display = "none";
-          if (canvas.requestFullscreen) {
-            canvas.requestFullscreen();
-          } else if (canvas.webkitRequestFullscreen) {
-            canvas.webkitRequestFullscreen();
-          } else if (canvas.msRequestFullscreen) {
-            canvas.msRequestFullscreen();
-          } else {
-            alert("Fullscreen API not supported in this browser.");
-          }
-        });
-      }
-    }
-  });
 });
 
   socket.on('user-mic-status', ({ userId, micStatus }) => {
@@ -225,19 +218,21 @@ socket.on('room-users', (userList) => {
     const msag = `<div>${userId} : ${msg}</div>`;
     const msgDiv = document.getElementById('messages');   
     msgDiv.innerHTML += msag;
+    msgDiv.scrollTop = msgDiv.scrollHeight;
   });
 
+
+
   const send_btn = document.getElementById("send-msg");
-  send_btn.addEventListener("click", ()=> {
-    if (e.key === 'Enter') {
-      const input = document.getElementById('chat-input');
-      const msg = input.value.trim();
-      if (msg !== '') {
-        socket.emit('message-send', { roomId, userId, msg });
-        input.value = ''; // Clear the input field
-      }
+  send_btn.addEventListener("click", () => {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+    if (msg !== '') {
+      socket.emit('message-send', { roomId, userId, msg });
+      input.value = ''; // Clear the input field
     }
   });
+
 
   document.getElementById('chat-input').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
@@ -312,6 +307,17 @@ socket.on('room-users', (userList) => {
     location.replace("../");
   });
 
+  socket.on('user-exit',(user)=>{
+    const alertBox = document.getElementById('alert');
+    alertBox.innerHTML = `User : ${user} has left the room.`;
+    alertBox.style.display = 'block';
+
+    // Hide after 2 seconds
+    setTimeout(() => {
+      alertBox.style.display = 'none';
+      alertBox.innerHTML = '';
+    }, 2000);
+  })
 
   // Draggable videoElem
   let isDragging = false, offsetX = 0, offsetY = 0;

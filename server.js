@@ -29,7 +29,7 @@ app.get("/room/:id", (req, res) => {
 io.on("connection", (socket)=> {
   console.log("New User Connected: with socket id:", socket.id);
 
-  socket.on('join-room', ({ roomId, userId }) => {
+  socket.on('join-room', ({ roomId, userId , role}) => {
     socket.join(roomId);
     socket.roomId = roomId;
     socket.userId = userId;
@@ -38,7 +38,7 @@ io.on("connection", (socket)=> {
       rooms[roomId] = {};
       mic[roomId] = {};
     }
-    rooms[roomId][userId] = socket.id;
+    rooms[roomId][userId] = {socketId: socket.id, role: role};
     mic[roomId][userId] = false;
 
     if (message[roomId]) {
@@ -46,8 +46,7 @@ io.on("connection", (socket)=> {
     }
     console.log(`user ${userId} join room ${roomId}`);
     socket.to(roomId).emit('user-joined', userId);
-
-    io.to(roomId).emit('room-users', Object.keys(rooms[roomId]));
+    io.to(roomId).emit('room-users', rooms[roomId]);
   });
 
   socket.on("mic-status", ({ roomId, userId }) => {
@@ -62,7 +61,7 @@ io.on("connection", (socket)=> {
   socket.on("exit-room", ({ roomId, userId }) =>{
     console.log(`user ${userId} exit room ${roomId}`);
     socket.leave(roomId);
-    io.to(roomId).emit('user-exited', userId);
+    io.to(roomId).emit('user-exit', userId);
 
     if(rooms[roomId] && rooms[roomId][userId]){
       delete rooms[roomId][userId];
@@ -94,6 +93,7 @@ io.on("connection", (socket)=> {
     }
   });
 
+  
 
   socket.on('disconnect', ()=> {
     const roomId = socket.roomId;

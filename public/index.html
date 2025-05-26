@@ -7,7 +7,11 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <input type="text" name="name" id="name">
+    <input type="text" name="name" id="name" placeholder="Enter Name">
+    <select name="role" id="role">
+        <option value="Teacher">Teacher</option>
+        <option value="Student">Student</option>
+    </select>
     <button type="submit" id="createBtn">Create Meeting</button>
     <input type="text" name="meetingid" id="meetid">
     <button type="submit" id="joinBtn">Join Room</button>
@@ -17,11 +21,12 @@
     document.getElementById('createBtn').onclick = () => {
         const meetingID = Math.random().toString(36).substring(2, 10);
         const name = document.getElementById('name').value;
+        const role = document.getElementById('role').value;
         if(name == ''){
             alert('Please enter your name');
             return
         }else{
-            localStorage.setItem('userId', name);
+            localStorage.setItem('userId', JSON.stringify({name, role}));
             window.location.href = `/room/${meetingID}`;
         }
     };
@@ -30,11 +35,12 @@
     document.getElementById('joinBtn').onclick = () => {
     const meetingID = document.getElementById('meetid').value.trim();
     const name = document.getElementById('name').value;
+    const role = document.getElementById('role').value;
     if (meetingID) {
-        if(name == ''){
-            alert('Please enter your name');
+        if(name == '' && role == ''){
+            alert('Please enter your name and role');
         }else{
-            localStorage.setItem('userId', name);
+            localStorage.setItem('userId', JSON.stringify({name, role}));
             window.location.href = `/room/${meetingID}`;
         }
     } else {
