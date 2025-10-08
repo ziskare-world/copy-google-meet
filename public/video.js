@@ -51,19 +51,99 @@ document.addEventListener("DOMContentLoaded", () => {
     audioTrack.enabled = !isAudioPaused;
     isMicOn = !isAudioPaused;
   }
+
+  async function getEmptyVideoTrack() {
+    const canvas = document.createElement("canvas");
+    canvas.width = 640;
+    canvas.height = 480;
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
   
-  function toggleVideo() {
-    const videoTrack = localStream?.getVideoTracks()[0];
-    if (!videoTrack) return;
-    
-    isVideoPaused = !isVideoPaused;
-    videoTrack.enabled = !isVideoPaused;
-    isCameraOn = !isVideoPaused ;
+    // Continuously draw to keep frames alive
+    function draw() {
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      requestAnimationFrame(draw);
+    }
+    draw();
+  
+    const stream = canvas.captureStream(15); // 15 FPS
+    return stream.getVideoTracks()[0];
   }
+  
+ 
+  
+  async function toggleVideo() {
+    try {
+      const videoElem = document.getElementById("vid");
+      const oldTrack = localStream?.getVideoTracks()[0];
+  
+      // CAMERA → OFF
+      if (isCameraOn && oldTrack) {
+        oldTrack.stop();
+  
+        // Replace with live blank video (keeps peer connection alive)
+        const blankTrack = await getEmptyVideoTrack();
+  
+        for (const id in peers) {
+          const sender = peers[id].getSenders().find(s => s.track && s.track.kind === "video");
+          if (sender) {
+            sender.replaceTrack(blankTrack);
+          } else {
+            peers[id].addTrack(blankTrack, localStream);
+          }
+        }
+  
+        localStream.removeTrack(oldTrack);
+        localStream.addTrack(blankTrack);
+        videoElem.srcObject = localStream;
+  
+        isCameraOn = false;
+        isVideoPaused = true;
+        updateCamIcons();
+        return;
+      }
+  
+      // CAMERA → ON
+      const camStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: currentFacingMode },
+      });
+      const newTrack = camStream.getVideoTracks()[0];
+  
+      // Replace the blank track in ALL peer connections
+      for (const id in peers) {
+        const sender = peers[id].getSenders().find(s => s.track && s.track.kind === "video");
+        if (sender) {
+          await sender.replaceTrack(newTrack);
+        } else {
+          peers[id].addTrack(newTrack, localStream);
+        }
+      }
+  
+      // Update local stream
+      if (oldTrack) {
+        localStream.removeTrack(oldTrack);
+        oldTrack.stop();
+      }
+      localStream.addTrack(newTrack);
+      videoElem.srcObject = localStream;
+  
+      isCameraOn = true;
+      isVideoPaused = false;
+      updateCamIcons();
+  
+    } catch (err) {
+      console.error("Error toggling video:", err);
+    }
+  }
+  
+  
+  
   
   async function joinRoom() {
     
-    localStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: currentFacingMode}, audio: true });
+    localStream = await navigator.mediaDevices.getUserMedia({ video: false,  audio: true });
     videoElem.srcObject = localStream ;
     const videoTrack = localStream.getVideoTracks()[0];
     const audioTrack = localStream.getAudioTracks()[0];
