@@ -18,6 +18,7 @@ app.use(express.static(publicDir));
 const rooms = {}; // Format: {roomId: {userId: userId}}
 const mic = {};
 const message = {};
+
 app.get("/", (req, res) => {
   res.sendFile(path.join(publicDir, "index.html"));
 });
@@ -46,7 +47,33 @@ io.on("connection", (socket)=> {
     }
     console.log(`user ${userId} join room ${roomId}`);
     socket.to(roomId).emit('user-joined', userId);
+    socket.to(roomId).emit('user-join-videoroom', socket.id);
     io.to(roomId).emit('room-users', rooms[roomId]);
+
+    socket.on('offer', (data) => {
+      socket.to(data.target).emit('offer', {
+        sdp: data.sdp,
+        caller: socket.id
+      });
+      console.log('offer server');
+    });
+
+    socket.on('answer', (data) => {
+      socket.to(data.target).emit('answer', {
+        sdp: data.sdp,
+        callee: socket.id
+      });
+      console.log('answer server');
+    });
+
+    socket.on('ice-candidate', (data) => {
+      socket.to(data.target).emit('ice-candidate', {
+        candidate: data.candidate,
+        sender: socket.id
+      });
+      console.log('ice-candidate server');
+    });
+
   });
 
   socket.on("mic-status", ({ roomId, userId }) => {
@@ -58,23 +85,6 @@ io.on("connection", (socket)=> {
     });
   });
 
-  socket.on("exit-room", ({ roomId, userId }) =>{
-    console.log(`user ${userId} exit room ${roomId}`);
-    socket.leave(roomId);
-    io.to(roomId).emit('user-exit', userId);
-
-    if(rooms[roomId] && rooms[roomId][userId]){
-      delete rooms[roomId][userId];
-    }
-    if (mic[roomId] && mic[roomId][userId]){
-      delete mic[roomId][userId];
-    }
-    if (Object.keys(rooms[roomId]).length === 0) {
-      delete rooms[roomId];
-      delete mic[roomId];
-      delete message[roomId];
-    }
-  });
 
   socket.on('message-send', ({ roomId, userId, msg }) => {
     if (roomId && msg) {
@@ -92,12 +102,22 @@ io.on("connection", (socket)=> {
       console.warn('Invalid message payload:', { roomId, userId, msg });
     }
   });
+  
 
+socket.on("exit-room", ({ roomId, userId }) =>{
+    console.log(`user ${userId} exit room ${roomId}`);
+    socket.leave(roomId);
+    socket.to(roomId).emit('user-exit', (userId, socket.id));
+  });
   
 
   socket.on('disconnect', ()=> {
     const roomId = socket.roomId;
     const userId = socket.userId;
+
+    if (roomId){
+      socket.to(roomId).emit('user-stop-video', socket.id)
+    }
 
     if(roomId && userId && rooms[roomId] && rooms[roomId][userId]){
       delete rooms[roomId][userId];
@@ -106,10 +126,10 @@ io.on("connection", (socket)=> {
       }
 
       console.log(`user ${userId} left room ${roomId}`);
-
+      
       socket.to(roomId).emit('user-disconnected',userId);
       io.to(roomId).emit('room-users', Object.keys(rooms[roomId]));
-
+      socket.to(roomId).emit('user-left', socket.id);
       if (Object.keys(rooms[roomId]).length === 0) {
         delete rooms[roomId];
         delete mic[roomId];

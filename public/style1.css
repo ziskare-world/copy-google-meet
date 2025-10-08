@@ -627,3 +627,7 @@ body.theme-ocean .alert{
   margin-left: 30px;
   padding: 5px;
 }
+
+#vid{
+  transform: scaleX(-1);
+}
